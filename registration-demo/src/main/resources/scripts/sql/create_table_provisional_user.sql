@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS provisional_user (
+  id BIGINT AUTO_INCREMENT,
+  name VARCHAR(128) NOT NULL,
+  password VARCHAR(256) NOT NULL,
+  email VARCHAR(256) NOT NULL,
+  token_id VARCHAR(256) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY (email)
+)
