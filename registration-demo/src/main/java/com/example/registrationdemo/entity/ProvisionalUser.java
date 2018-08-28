@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 // 仮登録ユーザークラス
 @Entity
-@Table(name = "provisional_user")
+@Table(name = "user_token")
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,20 +26,22 @@ public class ProvisionalUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false)
-    private String name;
-    @Column(name = "password", nullable = false)
-    private String password;
-    @Column(name = "email", nullable = false)
-    private String email;
-    @Column(name = "token_id", nullable = false)
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId;
+    @Column(name = "token_id", nullable = false, unique = true)
     private String tokenId;
 
-    public ProvisionalUser of(String name, String password, String email, String tokenId) {
+    @OneToOne
+    @JoinColumn(name="user_id", insertable=false, updatable=false)
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name="token_id", insertable=false, updatable=false)
+    private Token token;
+
+    public ProvisionalUser of(String userId, String tokenId) {
         return ProvisionalUser.builder()
-            .name(name)
-            .password(password)
-            .email(email)
+            .userId(userId)
             .tokenId(tokenId)
             .build();
     }

@@ -22,14 +22,17 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "name", nullable = false)
+    private Long userId;
+    @Column(name = "name", nullable = false,  length = 128)
     private String name;
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 256)
     private String password;
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true, length = 256)
     private String email;
+    /*@Column(name = "status", nullable = false, length = 1)
+    private Integer status;*/
 
     public User of(String name, String password, String email) {
         return User.builder()

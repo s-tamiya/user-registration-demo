@@ -1,5 +1,5 @@
 package com.example.registrationdemo.service;
 
-public interface UserRegistrationService {
+public interface UserService {
 
 }
