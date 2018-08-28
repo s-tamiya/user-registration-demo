@@ -27,9 +27,9 @@ public class ProvisionalUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "user_id", nullable = false, unique = true)
-    private String userId;
+    private Long userId;
     @Column(name = "token_id", nullable = false, unique = true)
-    private String tokenId;
+    private Long tokenId;
 
     @OneToOne
     @JoinColumn(name="user_id", insertable=false, updatable=false)
@@ -39,7 +39,7 @@ public class ProvisionalUser {
     @JoinColumn(name="token_id", insertable=false, updatable=false)
     private Token token;
 
-    public ProvisionalUser of(String userId, String tokenId) {
+    public static ProvisionalUser of(Long userId, Long tokenId) {
         return ProvisionalUser.builder()
             .userId(userId)
             .tokenId(tokenId)
