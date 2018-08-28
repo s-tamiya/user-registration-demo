@@ -23,7 +23,7 @@ public class User {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)// TODO 管理テーブルで採番
     private Long userId;
     @Column(name = "name", nullable = false,  length = 128)
     private String name;

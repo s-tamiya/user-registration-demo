@@ -24,7 +24,7 @@ public class Token {
 
     @Id
     @Column(name = "token_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // TODO 管理テーブルで採番
     private Long tokenId;
     @Column(name = "token", nullable = false)
     private String token;

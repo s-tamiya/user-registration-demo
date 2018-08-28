@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping(
-            path = "preentry",
+            path = "register",
             produces = MediaType.TEXT_PLAIN_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String provisionalRgister(@RequestBody User user) {
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping(
-            path = "auth/{token}",
+            path = "register/comfirm/{token}",
             produces = MediaType.TEXT_PLAIN_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String register(@PathVariable(value = "token") String token) {
