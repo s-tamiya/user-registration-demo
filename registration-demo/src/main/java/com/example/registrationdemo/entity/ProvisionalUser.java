@@ -1,5 +1,8 @@
 package com.example.registrationdemo.entity;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +19,7 @@ import lombok.NoArgsConstructor;
 
 // 仮登録ユーザークラス
 @Entity
-@Table(name = "user_token")
+@Table(name = "provisional_user")
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,23 +29,24 @@ public class ProvisionalUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
-    @Column(name = "token_id", nullable = false, unique = true)
-    private Long tokenId;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Column(name = "token", nullable = false)
+    private String token;
+    @Column(name = "expire_date", nullable = false)
+    private LocalDateTime expireDate;
+    @Column(name = "create_date", nullable = false)
+    private LocalDateTime createDate;
 
-    @OneToOne
-    @JoinColumn(name="user_id", insertable=false, updatable=false)
-    private User user;
-
-    @OneToOne
-    @JoinColumn(name="token_id", insertable=false, updatable=false)
-    private Token token;
-
-    public static ProvisionalUser of(Long userId, Long tokenId) {
+    public static ProvisionalUser of(String email, String password, String token, LocalDateTime expireDate) {
         return ProvisionalUser.builder()
-            .userId(userId)
-            .tokenId(tokenId)
+            .email(email)
+            .password(password)
+            .token(token)
+            .expireDate(expireDate)
+            .createDate(LocalDateTime.now())
             .build();
     }
 }

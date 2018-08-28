@@ -2,6 +2,7 @@ package com.example.registrationdemo.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -24,13 +25,13 @@ public class ProvisionalUserRepositoryTests {
     private ProvisionalUserRepository provisionalUserRepository;
 
     @Test
-    public void findByUserId() {
+    public void findByEmail() {
         ProvisionalUser expected = testEntityManager
                 .persistFlushFind(
-                        ProvisionalUser.of(Long.valueOf(3L), Long.valueOf(3L))
+                        ProvisionalUser.of("test1@example", "pass", "test1 token", LocalDateTime.of(2018, 8, 1, 0, 0, 0))
                         );
         System.out.println(expected);
-        Optional<ProvisionalUser> user = provisionalUserRepository.findByUserId(expected.getUserId());
+        Optional<ProvisionalUser> user = provisionalUserRepository.findByEmail(expected.getEmail());
         ProvisionalUser actual = user.orElseThrow(RuntimeException::new);
         System.out.println(actual);
         assertThat(actual).isEqualTo(expected);
