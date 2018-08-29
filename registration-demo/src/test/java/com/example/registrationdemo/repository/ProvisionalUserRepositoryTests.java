@@ -30,7 +30,7 @@ public class ProvisionalUserRepositoryTests {
                 .persistFlushFind(
                         ProvisionalUser.of("test1@example", "pass", "test1 token", LocalDateTime.of(2018, 8, 1, 0, 0, 0))
                         );
-        System.out.println(expected);
+
         Optional<ProvisionalUser> user = provisionalUserRepository.findByEmail(expected.getEmail());
         ProvisionalUser actual = user.orElseThrow(RuntimeException::new);
         System.out.println(actual);

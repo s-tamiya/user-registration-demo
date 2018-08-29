@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> get(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<User> find(@PathVariable(value = "id") Long id) {
         return null;
     }
 
