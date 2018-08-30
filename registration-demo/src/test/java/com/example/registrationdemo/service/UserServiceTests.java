@@ -21,6 +21,7 @@ import com.example.registrationdemo.entity.ProvisionalUser;
 import com.example.registrationdemo.entity.User;
 import com.example.registrationdemo.repository.ProvisionalUserRepository;
 import com.example.registrationdemo.repository.UserRepository;
+import com.example.registrationdemo.security.OneTimeToken;
 import com.example.registrationdemo.service.impl.UserServiceImpl;
 
 @RunWith(SpringRunner.class)
@@ -33,6 +34,8 @@ public class UserServiceTests {
     private UserRepository userRepository;
     @MockBean
     private ProvisionalUserRepository provisionalUserRepository;
+    @MockBean
+    private OneTimeToken oneTimeToken;
 
 
     @Before
@@ -99,7 +102,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void provisionalRegister_OK() {
+    public void provisionalRegister_OK() throws Exception {
         User user = new User(1L, "testuser1", "pass", "test1@example.com");
 
         when(userRepository.findByEmail(user.getEmail()))
@@ -116,7 +119,7 @@ public class UserServiceTests {
 
     // 例外のテスト① アノテーションで例外を予測する
     @Test(expected = RuntimeException.class)
-    public void provisionalRegister_AlreadyExists() {
+    public void provisionalRegister_AlreadyExists() throws Exception {
         User user = new User(1L, "testuser1", "pass", "test1@example.com");
 
         // 本登録済みを想定
@@ -131,7 +134,7 @@ public class UserServiceTests {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void provisionalRegister_AlreadyExists2() {
+    public void provisionalRegister_AlreadyExists2() throws Exception {
         User user = new User(1L, "testuser1", "pass", "test1@example.com");
 
         expectedException.expect(RuntimeException.class);

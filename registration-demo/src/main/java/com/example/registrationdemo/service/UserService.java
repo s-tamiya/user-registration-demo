@@ -14,6 +14,6 @@ public interface UserService {
 
     public Optional<ProvisionalUser> findProvisionalUserByEmail(String email);
     public Optional<ProvisionalUser> findProvisionalUserByToken(String token);
-    public void provisionalRegister(User user);
+    public void provisionalRegister(User user) throws Exception;
     public void register(String token);
 }

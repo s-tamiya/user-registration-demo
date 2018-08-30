@@ -1,8 +1,12 @@
 package com.example.registrationdemo.service.impl;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,24 +15,26 @@ import com.example.registrationdemo.entity.ProvisionalUser;
 import com.example.registrationdemo.entity.User;
 import com.example.registrationdemo.repository.ProvisionalUserRepository;
 import com.example.registrationdemo.repository.UserRepository;
+import com.example.registrationdemo.security.OneTimeToken;
 import com.example.registrationdemo.service.UserService;
 
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final Long ONE_TIME_TOKEN_EXPIRE_TIME = 24L;
-
     private ProvisionalUserRepository provisionalUserRepository;
     private UserRepository userRepository;
+    private OneTimeToken oneTimeToken;
 
     @Autowired
     public UserServiceImpl(
             ProvisionalUserRepository provisionalUserRepository,
-            UserRepository userRepository)
+            UserRepository userRepository,
+            OneTimeToken oneTimeToken)
     {
         this.provisionalUserRepository = provisionalUserRepository;
         this.userRepository = userRepository;
+        this.oneTimeToken= oneTimeToken;
     }
 
     @Override
@@ -69,17 +75,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(timeout = 100)
-    public void provisionalRegister(User entry) {
+    public void provisionalRegister(User entry) throws Exception {
 
         if (this.findUserByEmail(entry.getEmail()).isPresent()) {
+        	// TODO 例外処理の実装
             throw new RuntimeException("本登録済み");
         }
 
         ProvisionalUser provUser = this.findProvisionalUserByEmail(entry.getEmail())
             .orElse(ProvisionalUser.of(entry.getEmail(), entry.getPassword()));
-
-        provUser.setToken("test1");
-        provUser.setExpireDate(LocalDateTime.now().plusHours(ONE_TIME_TOKEN_EXPIRE_TIME));
+        
+        String token;
+        try {
+            token = oneTimeToken.genarateToken();
+        } catch (Exception e) {
+            throw e;
+        }
+        provUser.setToken(token);
+        provUser.setExpireDate(LocalDateTime.now().plusHours(OneTimeToken.EXPIRE_TIME));
         provisionalUserRepository.save(provUser);
 
     }
@@ -87,15 +100,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(timeout = 100)
     public void register(String token) {
+        
         ProvisionalUser provUser = provisionalUserRepository
                 .findByToken(token)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(RuntimeException::new);// TODO 例外処理の実装
 
         if (provUser.isExpired()) {
+        	// TODO 例外処理の実装
             throw new RuntimeException("URLの有効期限切れ");
         }
 
         User user = User.of(provUser);
         userRepository.save(user);
     }
+    
 }
