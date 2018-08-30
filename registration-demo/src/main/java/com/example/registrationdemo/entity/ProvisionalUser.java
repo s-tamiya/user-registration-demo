@@ -56,6 +56,7 @@ public class ProvisionalUser {
     }
 
     public boolean isExpired() {
+        System.out.println(this.expireDate.compareTo(LocalDateTime.now()) == -1);
         return this.expireDate.compareTo(LocalDateTime.now()) == -1;
     }
 }

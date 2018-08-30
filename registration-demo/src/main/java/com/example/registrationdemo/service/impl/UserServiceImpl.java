@@ -69,27 +69,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(timeout = 100)
-    public void provisionalRegister(User user) {
+    public void provisionalRegister(User entry) {
 
-        if (this.findUserByEmail(user.getEmail()).isPresent()) {
+        if (this.findUserByEmail(entry.getEmail()).isPresent()) {
             throw new RuntimeException("本登録済み");
         }
 
-        ProvisionalUser entry = this.findProvisionalUserByEmail(user.getEmail())
-            .orElse(ProvisionalUser.of(user.getEmail(), user.getPassword()));
+        ProvisionalUser provUser = this.findProvisionalUserByEmail(entry.getEmail())
+            .orElse(ProvisionalUser.of(entry.getEmail(), entry.getPassword()));
 
-        entry.setToken("test1");
-        entry.setExpireDate(LocalDateTime.now().plusHours(ONE_TIME_TOKEN_EXPIRE_TIME));
-        provisionalUserRepository.save(entry);
+        provUser.setToken("test1");
+        provUser.setExpireDate(LocalDateTime.now().plusHours(ONE_TIME_TOKEN_EXPIRE_TIME));
+        provisionalUserRepository.save(provUser);
 
     }
 
     @Override
     @Transactional(timeout = 100)
     public void register(String token) {
-        ProvisionalUser provUser = provisionalUserRepository.findByToken(token).orElseThrow(RuntimeException::new);
+        ProvisionalUser provUser = provisionalUserRepository
+                .findByToken(token)
+                .orElseThrow(RuntimeException::new);
+
         if (provUser.isExpired()) {
-            throw new RuntimeException("トークンの有効期限切れ");
+            throw new RuntimeException("URLの有効期限切れ");
         }
 
         User user = User.of(provUser);
