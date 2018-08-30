@@ -154,7 +154,7 @@ public class UserServiceTests {
                 "pass",
                 "test_token",
                 LocalDateTime.of(2018, 8, 31, 12, 00),
-                LocalDateTime.now()
+                LocalDateTime.of(2017, 8, 31, 12, 00)
                 );
         User expected = new User(null, null, "pass", "test1@example.com");
 
@@ -176,8 +176,6 @@ public class UserServiceTests {
         userService.register(token);
     }
 
-    /*
-     * うまくいかない
     @Test(expected = RuntimeException.class)
     public void register_Expired() {
         String token = "test_token";
@@ -186,15 +184,14 @@ public class UserServiceTests {
                 "test1@example.com",
                 "pass",
                 "test_token",
-                LocalDateTime.of(2018, 8, 31, 12, 00),
-                LocalDateTime.of(2018, 1, 1, 12, 00)
+                LocalDateTime.of(2017, 8, 30, 12, 00),
+                LocalDateTime.of(2017, 8, 30, 12, 00)
                 );
 
-        System.out.println(prov);
         when(provisionalUserRepository.findByToken(token))
-            .thenReturn(Optional.of(prov));
+        .thenReturn(Optional.of(prov));
 
         userService.register(token);
 
-    }*/
+    }
 }
