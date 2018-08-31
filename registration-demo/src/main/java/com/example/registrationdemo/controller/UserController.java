@@ -1,6 +1,9 @@
 package com.example.registrationdemo.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,43 +22,45 @@ import com.example.registrationdemo.service.UserService;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    private UserService service;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> find(@PathVariable(value = "id") Long id) {
-        return null;
+        Optional<User> user = userService.findUserById(id);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping(
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> update() {
-        return null;
+    public ResponseEntity<User> update(@RequestBody User user) {
+        userService.updateUser(user);
+        Optional<User> updated = userService.findUserById(user.getUserId());
+        return updated.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null));
     }
 
-    @DeleteMapping(produces = MediaType.TEXT_PLAIN_VALUE)
-    public String remove() {
+    @DeleteMapping(path = "{id}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String remove(@PathVariable(value = "id") Long id) {
+        userService.deleteUser(id);
         return "success";
     }
 
     @PostMapping(
             path = "register",
-            produces = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String provisionalRgister(@RequestBody User user) {
-        return null;
+    public ResponseEntity<User> register(@RequestBody User user) {
+        userService.createUser(user);
+        Optional<User> registerd = userService.findUserByEmail(user.getEmail());
+        return registerd.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null));
     }
 
-    @GetMapping(
-            path = "register/comfirm/{token}",
-            produces = MediaType.TEXT_PLAIN_VALUE,
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String register(@PathVariable(value = "token") String token) {
-        return null;
-    }
 }

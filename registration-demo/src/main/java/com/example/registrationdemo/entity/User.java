@@ -42,10 +42,4 @@ public class User {
             .build();
     }
 
-    public static User of(ProvisionalUser user){
-        return User.builder()
-            .email(user.getEmail())
-            .password(user.getPassword())
-            .build();
-    }
 }
