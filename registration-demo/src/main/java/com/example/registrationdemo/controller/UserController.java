@@ -47,9 +47,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "{id}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public String remove(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Object> remove(@PathVariable(value = "id") Long id) {
         userService.deleteUser(id);
-        return "success";
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(
