@@ -10,7 +10,9 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 // ユーザークラス
 @Entity
@@ -31,6 +33,8 @@ public class User {
     private String password;
     @Column(name = "email", nullable = false, unique = true, length = 256)
     private String email;
+    @Column(name = "admin_flg", nullable = false, unique = true)
+    private Boolean adminFlg;
     /*@Column(name = "status", nullable = false, length = 1)
     private Integer status;*/
 
@@ -39,6 +43,7 @@ public class User {
             .name(name)
             .password(password)
             .email(email)
+            .adminFlg(false)
             .build();
     }
 

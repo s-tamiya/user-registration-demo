@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = UserController.class)
+@WebMvcTest(value = UserController.class, secure = false)
 public class UserControllerTests {
 
     @Autowired
@@ -52,7 +52,7 @@ public class UserControllerTests {
 
     @Test
     public void find() throws Exception {
-        User expected = new User(1L, "test_user", "pass", "test1@example.com");
+        User expected = new User(1L, "test_user", "pass", "test1@example.com", false);
         String expectedJson = objectMapper.writeValueAsString(expected);
         when(userService.findUserById(expected.getUserId()))
             .thenReturn(Optional.ofNullable(expected));
@@ -89,7 +89,7 @@ public class UserControllerTests {
 
     @Test
     public void update() throws Exception {
-        User expected = new User(1L, "test_user", "pass", "test1@example.com");
+        User expected = new User(1L, "test_user", "pass", "test1@example.com", false);
         String expectedJson = objectMapper.writeValueAsString(expected);
         when(userService.findUserById(1L)).thenReturn(Optional.ofNullable(expected));
 
@@ -125,10 +125,10 @@ public class UserControllerTests {
 
     @Test
     public void register() throws Exception {
-        User expected = new User(1L, "test_user", "pass", "test1@example.com");
+        User expected = new User(1L, "test_user", "pass", "test1@example.com", false);
         String expectedJson = objectMapper.writeValueAsString(expected);
 
-        User content = new User(null, "test_user", "pass", "test1@example.com");
+        User content = new User(null, "test_user", "pass", "test1@example.com", false);
         when(userService.findUserByEmail(content.getEmail()))
             .thenReturn(Optional.ofNullable(expected));
 

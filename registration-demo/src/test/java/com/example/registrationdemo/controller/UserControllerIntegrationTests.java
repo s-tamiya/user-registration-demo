@@ -54,7 +54,7 @@ public class UserControllerIntegrationTests {
     
     @Test
     public void find() throws Exception {
-        User expected = new User(1L, "test1", "pass", "test1@example.com");
+        User expected = new User(1L, "test1", "pass", "test1@example.com", false);
         RequestBuilder builder = MockMvcRequestBuilders.get("/user/{id}", 1L)
                 .accept(contentTypeJson);
         

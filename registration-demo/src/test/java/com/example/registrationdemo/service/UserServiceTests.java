@@ -37,7 +37,7 @@ public class UserServiceTests {
 
     @Test
     public void findUserByEmail() throws Exception {
-        User expected = new User(1L, "testuser1", "pass", "test1@example.com");
+        User expected = new User(1L, "testuser1", "pass", "test1@example.com", false);
 
         // Mockitoでモックを作成する
         when(userRepository.findByEmail(expected.getEmail()))
@@ -49,7 +49,7 @@ public class UserServiceTests {
 
     @Test
     public void updateUser() {
-        User expected = new User(1L, "testuser1", "pass", "test1@example.com");
+        User expected = new User(1L, "testuser1", "pass", "test1@example.com", false);
         userService.updateUser(expected);
         // 戻り値 void のメソッドはverifyでメソッドが呼ばれたことを確認する
         verify(userRepository, times(1)).save(expected);
@@ -57,14 +57,14 @@ public class UserServiceTests {
 
     @Test
     public void deleteUser() {
-        User expected = new User(1L, "testuser1", "pass", "test1@example.com");
+        User expected = new User(1L, "testuser1", "pass", "test1@example.com", false);
         userService.deleteUser(expected.getUserId());
         verify(userRepository, times(1)).deleteById(expected.getUserId());
     }
 
     @Test
     public void createUser_OK() throws Exception {
-        User user = new User(1L, "testuser1", "pass", "test1@example.com");
+        User user = new User(1L, "testuser1", "pass", "test1@example.com", false);
 
         when(userRepository.findByEmail(user.getEmail()))
             .thenReturn(Optional.empty());
@@ -79,7 +79,7 @@ public class UserServiceTests {
     // 例外のテスト① アノテーションで例外を予測する
     @Test(expected = RuntimeException.class)
     public void createUser_AlreadyExists() throws Exception {
-        User user = new User(1L, "testuser1", "pass", "test1@example.com");
+        User user = new User(1L, "testuser1", "pass", "test1@example.com", false);
 
         // 本登録済みを想定
         when(userRepository.findByEmail(user.getEmail()))
@@ -96,7 +96,7 @@ public class UserServiceTests {
 
     @Test
     public void provisionalRegister_AlreadyExists2() throws Exception {
-        User user = new User(1L, "testuser1", "pass", "test1@example.com");
+        User user = new User(1L, "testuser1", "pass", "test1@example.com", false);
 
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("本登録済み");
