@@ -1,9 +1,8 @@
 package com.example.registrationdemo.security;
 
-import static com.example.registrationdemo.security.Constants.SECRET_KEY;
+import static com.example.registrationdemo.security.Constants.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailService;
-    
+
     private final Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
-    
+
     @Override
     protected void configure (HttpSecurity http) throws Exception {
        http
@@ -48,9 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
            .formLogin()
              .loginProcessingUrl("/login").permitAll()
                .usernameParameter("email")
-               .passwordParameter("pass")
+               .passwordParameter("password")
              .successHandler(authenticationSuccessHandler())
-               //.failureHandler(authenticationFailureHandler())
+             .failureHandler(authenticationFailureHandler())
          .and()
            .logout()
              .logoutSuccessHandler(logoutSuccessHandler())
@@ -67,27 +66,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth,
-        UserDetailsService userDetailService,
+        @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailService,
         PasswordEncoder passwordEncoder
     ) throws Exception {
       auth.eraseCredentials(true)
           .userDetailsService(userDetailService)
           .passwordEncoder(passwordEncoder);
     }
-    
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     private JwtAuthenticationEntryPoint unauthrizedHandler() {
         return new JwtAuthenticationEntryPoint();
     }
-    
+
     private LogoutSuccessHandler logoutSuccessHandler() {
         return new HttpStatusReturningLogoutSuccessHandler();
     }
-    
+
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilter() throws Exception {
         return new JwtAuthenticationTokenFilter(algorithm);
@@ -95,5 +94,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtAuthenticationSuccessHandler authenticationSuccessHandler() {
         return new JwtAuthenticationSuccessHandler(algorithm);
+    }
+
+    private JwtAuthenticationFailureHandler authenticationFailureHandler() throws Exception {
+        return new JwtAuthenticationFailureHandler();
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.registrationdemo.entity.User;
@@ -58,6 +57,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
+        // TODO encode password
         userService.createUser(user);
         Optional<User> registerd = userService.findUserByEmail(user.getEmail());
         return registerd.map(ResponseEntity::ok)

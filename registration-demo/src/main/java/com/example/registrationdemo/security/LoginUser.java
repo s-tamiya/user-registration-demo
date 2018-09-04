@@ -15,8 +15,7 @@ public class LoginUser extends User {
     }
 
     public LoginUser(com.example.registrationdemo.entity.User user) {
-      super(user.getName(), user.getPassword(), null);
-      //super(user.getName(), user.getPassword(), determineRoles(user.getAdmin()));
+      super(user.getName(), user.getPassword(), determineRoles(user.getAdminFlg()));
       this.user = user;
       System.out.println("Login User : name=" + this.user.getName() + " " + " auth=" + this.getAuthorities());
     }
