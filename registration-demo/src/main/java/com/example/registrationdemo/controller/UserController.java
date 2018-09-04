@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +25,12 @@ public class UserController {
 
     private UserService userService;
 
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -58,6 +62,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
         // TODO encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.createUser(user);
         Optional<User> registerd = userService.findUserByEmail(user.getEmail());
         return registerd.map(ResponseEntity::ok)

@@ -23,7 +23,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     private final Algorithm algorithm;
 
     @Value("${security.token.expiration.time:1000L}")
-    private Long EXPIRATION_TIME;
+    private final Long EXPIRATION_TIME = 1000L * 60L * 10L;
 
     public JwtAuthenticationSuccessHandler(Algorithm algorithm) {
         Objects.requireNonNull(algorithm, "algorithm must not be null");
