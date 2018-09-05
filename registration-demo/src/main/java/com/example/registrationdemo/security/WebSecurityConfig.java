@@ -89,11 +89,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilter() throws Exception {
-        return new JwtAuthenticationTokenFilter(algorithm);
+        return new JwtAuthenticationTokenFilter();
     }
 
     private JwtAuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtAuthenticationSuccessHandler(algorithm);
+        return new JwtAuthenticationSuccessHandler();
     }
 
     private JwtAuthenticationFailureHandler authenticationFailureHandler() throws Exception {
