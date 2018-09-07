@@ -7,30 +7,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { Injectable } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-
-const routes: Routes = [
-        { path : '', pathMatch: 'full', redirectTo: 'home' },
-        { path: 'home', component: HomeComponent },
-        { path: 'login', component: LoginComponent },
-        { path: 'register', component: RegisterComponent },
-];
+import { AppRoutingModule } from './app-routing.module';
+import { HomeModule } from './modules/home/home.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    RegisterComponent,
-    HomeComponent
   ],
   imports: [
-    RouterModule.forRoot(routes),
     NgbModule,
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule,
+    HomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
