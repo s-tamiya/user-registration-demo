@@ -1,0 +1,10 @@
+header.content {
+    padding-top: 100px;
+    padding-bottom: 15px;
+}
+
+.create-account-guid {
+  width: 100%;
+  max-width: 400px;
+  margin: 15px auto;
+}

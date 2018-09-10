@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
+import { LoginModule } from './modules/login/login.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { HomeModule } from './modules/home/home.module';
     FormsModule,
     AppRoutingModule,
     HomeModule,
+    LoginModule
   ],
   providers: [],
   bootstrap: [AppComponent]

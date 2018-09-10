@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './pages/home.component';
 
 const routes: Routes = [
-        { path : 'home', component: HomeComponent },
+  { path : 'home', component: HomeComponent },
 ];
 
 @NgModule({
@@ -12,7 +12,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes)
   ],
-  exports: [ RouterModule ],
+  exports: [RouterModule],
   declarations: []
 })
 export class HomeRoutingModule { }
