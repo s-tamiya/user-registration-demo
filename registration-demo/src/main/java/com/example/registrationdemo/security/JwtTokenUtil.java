@@ -30,12 +30,16 @@ public class JwtTokenUtil {
             Date notBefore = new Date(issueAt.getTime());
             Date expireDate = new Date(issueAt.getTime() + expirationMs);
 
+            System.out.println("onAuthenticationSuccess : " + (loginUser != null));
+
             String token = JWT.create()
                 .withIssuedAt(issueAt)
                 .withNotBefore(notBefore)
                 .withExpiresAt(expireDate)
                 .withSubject(loginUser.getUser().getUserId().toString())
                 .sign(algorithm);
+
+            System.out.println("onAuthenticationSuccess : " + (token != null));
 
             System.out.println(token);
 

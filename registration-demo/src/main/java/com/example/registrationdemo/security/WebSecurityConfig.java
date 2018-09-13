@@ -2,6 +2,8 @@ package com.example.registrationdemo.security;
 
 import static com.example.registrationdemo.security.Constants.*;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.auth0.jwt.algorithms.Algorithm;
 
@@ -26,6 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailService;
+
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
     private final Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
@@ -59,9 +67,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
            .addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
            .sessionManagement()
              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-           ;
+         .and()
+             .cors()
+             .configurationSource(this.corsConfigurationSource())
+         ;
 
-       ;
     }
 
     @Autowired
@@ -72,6 +82,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       auth.eraseCredentials(true)
           .userDetailsService(userDetailService)
           .passwordEncoder(passwordEncoder);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        config.addAllowedHeader(CorsConfiguration.ALL);
+        config.addExposedHeader("Authorization");
+        config.setAllowedMethods(Arrays.asList("GET","POST","DELETE","PUT","OPTIONS"));
+        config.setAllowCredentials(true);
+        config.addExposedHeader(HEADER_STRING);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 
     @Bean
@@ -89,11 +115,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilter() throws Exception {
-        return new JwtAuthenticationTokenFilter();
+        return new JwtAuthenticationTokenFilter(jwtTokenUtil);
     }
 
     private JwtAuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtAuthenticationSuccessHandler();
+        return new JwtAuthenticationSuccessHandler(jwtTokenUtil);
     }
 
     private JwtAuthenticationFailureHandler authenticationFailureHandler() throws Exception {

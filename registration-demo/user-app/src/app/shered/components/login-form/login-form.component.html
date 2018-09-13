@@ -1,8 +1,8 @@
 <form class="form-signin card">
   <div class="card-title">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <h1 class="h3 mb-3 font-weight-normal">{{messages.title}}</h1>
   </div>
-  <div class="form-group">
+  <div *ngIf="isSignup" class="form-group">
     <label for="inputName">Username</label>
     <input type="email" id="inputName" class="form-control" placeholder="Username" [(ngModel)]=name name="name" required autofocus>
   </div>
@@ -19,5 +19,5 @@
       <input type="checkbox" value="remember-me"> Remember me
     </label>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="button" (click)="login()">Sign in</button>
+  <button class="btn btn-md btn-primary btn-block" type="button" (click)="submit()">{{messages.button}}</button>
 </form>

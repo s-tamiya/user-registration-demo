@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -15,11 +15,20 @@ const httpOptions = {
 export class LoginService {
   private BASE_URL = 'http://localhost:8080';
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
-  test (param: string): string {
-    return 'Login Service : ' + param;
+  register (name: string, email: string, password: string) : Observable<User> {
+    const credentials = { name: name, email: email, password: password };
+    return this.http
+      .post<User>(`${this.BASE_URL}/user/register`, credentials);
+  }
+
+  antenticate (email: string, password: string) : Observable<HttpResponse<any>> {
+    const credentials = { email: email, password: password };
+    let httpParams = new HttpParams()
+      .append("email", email)
+      .append("password", password);
+
+    return this.http.post<HttpResponse<any>>(`${this.BASE_URL}/login`, httpParams, {observe: 'response'});
   }
 }

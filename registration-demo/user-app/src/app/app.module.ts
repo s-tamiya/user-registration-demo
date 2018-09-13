@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
 import { LoginModule } from './modules/login/login.module';
+import { RegisterModule } from './modules/register/register.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { LoginModule } from './modules/login/login.module';
     FormsModule,
     AppRoutingModule,
     HomeModule,
-    LoginModule
+    LoginModule,
+    RegisterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

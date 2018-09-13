@@ -1,9 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 import { LoginService } from './login.service';
+import { TokenService } from '../auth/token.service';
 import { User } from '../../models/user';
+
+const values = {
+  signup : {
+    title: 'Please Sign Up',
+    button: 'Sign Up',
+  },
+  signin : {
+    title: 'Please Sign In',
+    button: 'Sign In',
+  }
+}
 
 @Component({
   selector: 'app-login-form',
@@ -13,15 +25,15 @@ import { User } from '../../models/user';
 })
 export class LoginFormComponent implements OnInit {
 
-  public name: string;
+  public name: string;　
   public email: string;
   public password: string;
-  //public isSignUp: boolean;
-  //@Input() hero: Hero;これで渡せたはず...
+  @Input() isSignup: boolean;
+  public messages = {};
 
   constructor(
     private loginService: LoginService,
-    private route: ActivatedRoute// これを使ってパラメータの受け渡し？
+    private tokenService: TokenService
   ) {
   }
 
@@ -29,10 +41,17 @@ export class LoginFormComponent implements OnInit {
     this.name = '';
     this.email = '';
     this.password = '';
-    alert(isSignUp);
+
+    this.messages = this.isSignup ? values.signup: values.signin;
   }
 
-  login (): void{
-    alert(this.loginService.test('test'));
+  submit (): void{
+    if (this.isSignup) {
+      this.loginService.register(this.name, this.email, this.password)
+        .subscribe(data => console.log(data));
+    } else {
+      this.loginService.antenticate(this.email, this.password)
+        .subscribe(data => this.tokenService.save(data.headers.get('Authorization')));
+    }
   }
 }
