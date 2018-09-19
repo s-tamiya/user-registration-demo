@@ -18,6 +18,10 @@ export class TokenService {
     return window.sessionStorage.getItem(TOKEN_KEY);
   }
 
+  public getAuthToken(): string {
+    return 'Bearer ' + this.get();
+  }
+
   public clear() {
     window.sessionStorage.removeItem(TOKEN_KEY);
   }

@@ -45,13 +45,13 @@ export class LoginFormComponent implements OnInit {
     this.messages = this.isSignup ? values.signup: values.signin;
   }
 
-  submit (): void{
-    if (this.isSignup) {
-      this.loginService.register(this.name, this.email, this.password)
-        .subscribe(data => console.log(data));
-    } else {
-      this.loginService.antenticate(this.email, this.password)
-        .subscribe(data => this.tokenService.save(data.headers.get('Authorization')));
-    }
+  signup(): void {
+    this.loginService.register(this.name, this.email, this.password)
+      .subscribe(data => console.log(data));
+  }
+
+  login(): void {
+    this.loginService.login(this.email, this.password)
+      .subscribe(result => console.log(`LoginFormComponent.login result: ${result}`));
   }
 }
